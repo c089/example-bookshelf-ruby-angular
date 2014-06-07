@@ -11,7 +11,7 @@ angular
                 redirectTo: '/shelve/foo'
             });
     }])
-    .controller('ShelveController', function ($http, $scope) {
+    .controller('ShelveController', function ($http, $routeParams, $scope) {
         $scope.books = {
             available: [],
             onShelve: []
@@ -20,5 +20,9 @@ angular
         $http.get('/api/books').success(function (data) {
             $scope.books.available = data;
         });
+        $http.get('/api/shelves/' + $routeParams.userId)
+            .success(function (data) {
+                $scope.books.onShelve = data;
+            });
 
     });
