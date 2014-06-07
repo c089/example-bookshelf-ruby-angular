@@ -21,4 +21,22 @@ describe('ShelveController', function () {
             onShelve: []
         });
     }));
+
+    it('should load the book lists via API',
+        inject(function($httpBackend, $controller) {
+            var scope = {},
+                controller,
+                books = [{ id: '1', title: '1984', author: 'George Orwell'}];
+
+                $httpBackend.expectGET('/api/books').respond(books);
+
+                $controller('ShelveController', { $scope: scope}),
+
+                $httpBackend.flush();
+
+                expect(scope.books.available).to.deep.equal(books);
+        }
+
+    ));
+
 });
