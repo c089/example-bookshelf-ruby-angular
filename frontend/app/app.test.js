@@ -31,27 +31,27 @@ describe('ShelveController', function () {
     beforeEach(module('bookshelfApp'));
 
     it('should load the list of books and the shelve for the given user',
-            inject(function ($httpBackend, $controller) {
-            var scope = {},
-                username = 'c089';
+        inject(function ($httpBackend, $controller) {
+        var scope = {},
+            username = 'c089';
 
-                $httpBackend.expectGET('/api/books').respond(books);
-                $httpBackend.expectGET('/api/shelves/c089').respond([books[1]]);
+            $httpBackend.expectGET('/api/books').respond(books);
+            $httpBackend.expectGET('/api/shelves/c089').respond([books[1]]);
 
-                $controller('ShelveController', {
-                    $scope: scope,
-                    $routeParams: { userId: username }
-                });
+            $controller('ShelveController', {
+                $scope: scope,
+                $routeParams: { userId: username }
+            });
 
-                $httpBackend.flush();
+            $httpBackend.flush();
 
-                expect(scope.books[0].id).to.equal('1');
-                expect(scope.books[0].isOnShelf).to.be.false;
-                expect(scope.books[1].id).to.equal('2');
-                expect(scope.books[1].isOnShelf).to.be.true;
-                expect(scope.books[2].id).to.equal('3');
-                expect(scope.books[2].isOnShelf).to.be.false;
-            })
+            expect(scope.books[0].id).to.equal('1');
+            expect(scope.books[0].isOnShelf).to.be.false;
+            expect(scope.books[1].id).to.equal('2');
+            expect(scope.books[1].isOnShelf).to.be.true;
+            expect(scope.books[2].id).to.equal('3');
+            expect(scope.books[2].isOnShelf).to.be.false;
+        })
     );
 
     it('can add a book to the shelf', inject(function($injector) {
