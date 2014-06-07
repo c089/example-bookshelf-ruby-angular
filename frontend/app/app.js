@@ -12,17 +12,27 @@ angular
             });
     }])
     .controller('ShelveController', function ($http, $q, $routeParams, $scope) {
+        var shelfPath = function () {
+                return '/api/shelves/' + $routeParams.userId;
+            },
+            sendShelfToServer = function () {
+                var booksOnShelf = _($scope.books).where({isOnShelf: true});
+                $http.put(shelfPath(), _.pluck(booksOnShelf, 'id'));
+            };
+
         $scope.addToShelf = function (book) {
             book.isOnShelf = true;
+            sendShelfToServer();
         }
 
         $scope.removeFromShelf = function (book) {
             book.isOnShelf = false;
+            sendShelfToServer();
         }
 
         $q.all([
             $http.get('/api/books'),
-            $http.get('/api/shelves/' + $routeParams.userId)
+            $http.get(shelfPath())
         ]).then(function (results) {
             var allBooks = results[0].data;
             var booksOnShelve = results[1].data;

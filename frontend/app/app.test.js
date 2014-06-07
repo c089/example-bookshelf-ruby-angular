@@ -10,6 +10,7 @@ describe('bookshelf frontend app', function () {
 });
 
 describe('ShelveController', function () {
+
     var books = [
                     {
                         id: '1',
@@ -55,28 +56,42 @@ describe('ShelveController', function () {
     );
 
     it('can add a book to the shelf', inject(function($injector) {
-        var $controller = $injector.get('$controller'),
-            scope = { books: [ { id: 1, isOnShelf: false } ]};
+        var $httpBackend = $injector.get('$httpBackend'),
+            $controller = $injector.get('$controller');
+            scope = { };
 
-        $controller('ShelveController', { $scope: scope });
+        $httpBackend.expectGET('/api/books').respond(books);
+        $httpBackend.expectGET('/api/shelves/c089').respond([]);
+        $controller('ShelveController', {
+            $scope: scope,
+            $routeParams: { userId: 'c089' }
+        });
+        $httpBackend.flush();
 
+        $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
         scope.addToShelf(scope.books[0]);
-
+        $httpBackend.flush();
         expect(scope.books[0].isOnShelf).to.be.true;
 
     }));
 
     it('can remove a book from the shelf', inject(function($injector) {
-        var $controller = $injector.get('$controller'),
-            scope = { books: [ { id: 1, isOnShelf: true } ]};
+        var $httpBackend = $injector.get('$httpBackend'),
+            $controller = $injector.get('$controller'),
+            scope = {};
 
-        $controller('ShelveController', { $scope: scope });
+        $httpBackend.expectGET('/api/books').respond(books);
+        $httpBackend.expectGET('/api/shelves/c089').respond([books[0]]);
+        $controller('ShelveController', {
+            $scope: scope,
+            $routeParams: { userId: 'c089' }
+        });
+        $httpBackend.flush();
 
+        $httpBackend.expectPUT('/api/shelves/c089', []).respond(200);
         scope.removeFromShelf(scope.books[0]);
-
+        $httpBackend.flush();
         expect(scope.books[0].isOnShelf).to.be.false;
-
     }));
-
 
 });
