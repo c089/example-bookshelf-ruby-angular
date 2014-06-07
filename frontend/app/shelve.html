@@ -1,0 +1,13 @@
+<div id="books">
+
+    <h3>{{books.available.length}} Available Books</h3>
+    <ul>
+        <li ng-repeat="book in books.available">{{book.title}} by {{book.author}}</li>
+    </ul>
+
+    <h3>{{books.onShelve.length}} Books on Shelve</h3>
+    <ul>
+        <li ng-repeat="book in books.onShelve">{{book.title}} by {{book.author}}</li>
+    </ul>
+
+</div>
