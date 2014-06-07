@@ -10,6 +10,23 @@ describe('bookshelf frontend app', function () {
 });
 
 describe('ShelveController', function () {
+    var books = [
+                    {
+                        id: '1',
+                        title: '1984',
+                        author: 'George Orwell'
+                    },
+                    {
+                        id: '2',
+                        title: 'Brave New World',
+                        author: 'Aldous Huxley'
+                    },
+                    {
+                        id: '3',
+                        title: 'Hitchhikers Guide To The Galaxy',
+                        author: 'Douglas Adams'
+                    },
+                ];
 
     beforeEach(module('bookshelfApp'));
 
@@ -27,12 +44,10 @@ describe('ShelveController', function () {
     it('should load the list of books and the shelve for the given user',
             inject(function ($httpBackend, $controller) {
             var scope = {},
-                controller,
-                username = 'c089',
-                books = [{ id: '1', title: '1984', author: 'George Orwell'}];
+                username = 'c089';
 
                 $httpBackend.expectGET('/api/books').respond(books);
-                $httpBackend.expectGET('/api/shelves/c089').respond(books);
+                $httpBackend.expectGET('/api/shelves/c089').respond([books[1]]);
 
                 $controller('ShelveController', {
                     $scope: scope,
@@ -41,10 +56,10 @@ describe('ShelveController', function () {
 
                 $httpBackend.flush();
 
-                expect(scope.books.available).to.deep.equal(books);
-                expect(scope.books.onShelve).to.deep.equal(books);
+                expect(scope.books.available).to.deep.equal([books[0], books[2]]);
+                expect(scope.books.onShelve).to.deep.equal([books[1]]);
 
-            })
+            });
     );
 
 });

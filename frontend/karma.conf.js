@@ -3,6 +3,7 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['mocha'],
     files: [
+      'bower_components/underscore/underscore.js',
       'bower_components/chai/chai.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-route/angular-route.js',

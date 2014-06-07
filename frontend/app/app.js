@@ -21,8 +21,14 @@ angular
             $http.get('/api/books'),
             $http.get('/api/shelves/' + $routeParams.userId)
         ]).then(function (results) {
-            $scope.books.available = results[0].data;
-            $scope.books.onShelve = results[1].data;
+            var allBooks = results[0].data,
+                booksOnShelve = results[1].data;
+
+            $scope.books = _.groupBy(allBooks, function (book) {
+                var idsOfBooksOnShelve = _.pluck(booksOnShelve, 'id'),
+                    bookIsOnShelve = _(idsOfBooksOnShelve).contains(book.id);
+                return bookIsOnShelve ? 'onShelve' : 'available';
+            });
         });
 
     });
