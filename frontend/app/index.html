@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="bookshelfApp" lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Bookshelf</title>
+
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body>
+
+
+    <div id="books" ng-controller="ShelveController">
+
+        <h3>{{books.available.length}} Available Books</h3>
+        <ul>
+            <li ng-repeat="book in books.available">{{book.title}} by {{book.author}}</li>
+        </ul>
+
+        <h3>{{books.onShelve.length}} Books on Shelve</h3>
+        <ul>
+            <li ng-repeat="book in books.onShelve">{{book.title}} by {{book.author}}</li>
+        </ul>
+
+    </div>
+
+  </body>
+
+</html>
