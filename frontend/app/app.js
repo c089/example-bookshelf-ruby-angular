@@ -12,22 +12,26 @@ angular
             });
     }])
     .controller('ShelveController', function ($http, $q, $routeParams, $scope) {
-        $scope.books = {
-            available: [],
-            onShelve: []
-        };
+        $scope.addToShelf = function (book) {
+            book.isOnShelf = true;
+        }
+
+        $scope.removeFromShelf = function (book) {
+            book.isOnShelf = false;
+        }
 
         $q.all([
             $http.get('/api/books'),
             $http.get('/api/shelves/' + $routeParams.userId)
         ]).then(function (results) {
-            var allBooks = results[0].data,
-                booksOnShelve = results[1].data;
+            var allBooks = results[0].data;
+            var booksOnShelve = results[1].data;
 
-            $scope.books = _.groupBy(allBooks, function (book) {
-                var idsOfBooksOnShelve = _.pluck(booksOnShelve, 'id'),
-                    bookIsOnShelve = _(idsOfBooksOnShelve).contains(book.id);
-                return bookIsOnShelve ? 'onShelve' : 'available';
+            $scope.books = _.map(allBooks, function (book) {
+                var idsOfBooksOnShelve = _.pluck(booksOnShelve, 'id');
+                return _.extend({}, book, {
+                    isOnShelf: _(idsOfBooksOnShelve).contains(book.id)
+                });
             });
         });
 

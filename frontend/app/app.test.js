@@ -30,17 +30,6 @@ describe('ShelveController', function () {
 
     beforeEach(module('bookshelfApp'));
 
-    it('should initialize with empty book lists', inject(function ($controller) {
-        var scope = {},
-            controller = $controller('ShelveController', { $scope: scope});
-
-        expect(scope.books).to.deep.equal({
-            available: [],
-            onShelve: []
-        });
-    }));
-
-
     it('should load the list of books and the shelve for the given user',
             inject(function ($httpBackend, $controller) {
             var scope = {},
@@ -56,10 +45,38 @@ describe('ShelveController', function () {
 
                 $httpBackend.flush();
 
-                expect(scope.books.available).to.deep.equal([books[0], books[2]]);
-                expect(scope.books.onShelve).to.deep.equal([books[1]]);
-
+                expect(scope.books[0].id).to.equal('1');
+                expect(scope.books[0].isOnShelf).to.be.false;
+                expect(scope.books[1].id).to.equal('2');
+                expect(scope.books[1].isOnShelf).to.be.true;
+                expect(scope.books[2].id).to.equal('3');
+                expect(scope.books[2].isOnShelf).to.be.false;
             })
     );
+
+    it('can add a book to the shelf', inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            scope = { books: [ { id: 1, isOnShelf: false } ]};
+
+        $controller('ShelveController', { $scope: scope });
+
+        scope.addToShelf(scope.books[0]);
+
+        expect(scope.books[0].isOnShelf).to.be.true;
+
+    }));
+
+    it('can remove a book from the shelf', inject(function($injector) {
+        var $controller = $injector.get('$controller'),
+            scope = { books: [ { id: 1, isOnShelf: true } ]};
+
+        $controller('ShelveController', { $scope: scope });
+
+        scope.removeFromShelf(scope.books[0]);
+
+        expect(scope.books[0].isOnShelf).to.be.false;
+
+    }));
+
 
 });
