@@ -11,18 +11,18 @@ angular
                 redirectTo: '/shelve/foo'
             });
     }])
-    .controller('ShelveController', function ($http, $routeParams, $scope) {
+    .controller('ShelveController', function ($http, $q, $routeParams, $scope) {
         $scope.books = {
             available: [],
             onShelve: []
         };
 
-        $http.get('/api/books').success(function (data) {
-            $scope.books.available = data;
+        $q.all([
+            $http.get('/api/books'),
+            $http.get('/api/shelves/' + $routeParams.userId)
+        ]).then(function (results) {
+            $scope.books.available = results[0].data;
+            $scope.books.onShelve = results[1].data;
         });
-        $http.get('/api/shelves/' + $routeParams.userId)
-            .success(function (data) {
-                $scope.books.onShelve = data;
-            });
 
     });
