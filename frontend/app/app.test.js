@@ -59,7 +59,7 @@ describe('ShelveController', function () {
                 expect(scope.books.available).to.deep.equal([books[0], books[2]]);
                 expect(scope.books.onShelve).to.deep.equal([books[1]]);
 
-            });
+            })
     );
 
 });
