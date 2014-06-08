@@ -24,12 +24,12 @@ mod.controller('ShelveController', function ($q, $routeParams, $scope, BooksApiS
     $scope.addToShelf = function (book) {
         book.isOnShelf = true;
         sendShelfToServer();
-    }
+    };
 
     $scope.removeFromShelf = function (book) {
         book.isOnShelf = false;
         sendShelfToServer();
-    }
+    };
 
     $q.all([
         BooksApiService.retrieveBooks(),

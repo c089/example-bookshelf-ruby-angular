@@ -41,7 +41,7 @@ describe('ShelveController', function () {
         };
 
         module('bookshelfApp', function ($provide) {
-            $provide.value('BooksApiService', serviceStub)
+            $provide.value('BooksApiService', serviceStub);
         });
 
         inject(function ($injector) {
@@ -54,7 +54,7 @@ describe('ShelveController', function () {
                 var deferred = $q.defer();
                 stub.returns(deferred.promise);
                 deferred.resolve(result);
-            }
+            };
 
             resolveWith(serviceStub.retrieveBooks, books);
             resolveWith(serviceStub.retrieveShelf, [books[1]]);
