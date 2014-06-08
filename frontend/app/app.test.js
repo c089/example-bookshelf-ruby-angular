@@ -44,10 +44,11 @@ describe('ShelveController', function () {
             $provide.value('BooksApiService', serviceStub)
         });
 
-        inject(function ($q, _$controller_, _$rootScope_, _BooksApiService_) {
-            $controller = _$controller_;
-            $rootScope = _$rootScope_;
-            BooksApiService = _BooksApiService_;
+        inject(function ($injector) {
+            var $q = $injector.get('$q');
+            $controller = $injector.get('$controller');
+            $rootScope = $injector.get('$rootScope');
+            BooksApiService = $injector.get('BooksApiService');
 
             resolveWith = function resolveWith(stub, result) {
                 var deferred = $q.defer();
