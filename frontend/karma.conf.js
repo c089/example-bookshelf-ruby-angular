@@ -5,6 +5,7 @@ module.exports = function(config) {
     files: [
       'bower_components/underscore/underscore.js',
       'bower_components/chai/chai.js',
+      'bower_components/sinon/index.js',
       'bower_components/angular/angular.js',
       'bower_components/angular-route/angular-route.js',
       'bower_components/angular-mocks/angular-mocks.js',

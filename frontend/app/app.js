@@ -12,7 +12,7 @@ mod.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-mod.controller('ShelveController', function ($http, $q, $routeParams, $scope) {
+mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, BooksApiService) {
     var shelfPath = function () {
             return '/api/shelves/' + $routeParams.userId;
         },
@@ -32,7 +32,7 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope) {
     }
 
     $q.all([
-        $http.get('/api/books'),
+        BooksApiService.retrieveBooks(),
         $http.get(shelfPath())
     ]).then(function (results) {
         var allBooks = results[0].data;
@@ -47,3 +47,11 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope) {
     });
 
 });
+
+mod.factory('BooksApiService', ['$http', function ($http) {
+    return {
+        retrieveBooks: function () {
+            return $http.get('/api/books');
+        }
+    };
+}]);

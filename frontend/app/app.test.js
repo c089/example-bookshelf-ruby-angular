@@ -1,4 +1,22 @@
-var expect = chai.expect;
+var expect = chai.expect,
+    books = [
+        {
+            id: '1',
+            title: '1984',
+            author: 'George Orwell'
+        },
+        {
+            id: '2',
+            title: 'Brave New World',
+            author: 'Aldous Huxley'
+        },
+        {
+            id: '3',
+            title: 'Hitchhikers Guide To The Galaxy',
+            author: 'Douglas Adams'
+        },
+    ];
+
 
 describe('bookshelf frontend app', function () {
 
@@ -11,32 +29,27 @@ describe('bookshelf frontend app', function () {
 
 describe('ShelveController', function () {
 
-    var books = [
-                    {
-                        id: '1',
-                        title: '1984',
-                        author: 'George Orwell'
-                    },
-                    {
-                        id: '2',
-                        title: 'Brave New World',
-                        author: 'Aldous Huxley'
-                    },
-                    {
-                        id: '3',
-                        title: 'Hitchhikers Guide To The Galaxy',
-                        author: 'Douglas Adams'
-                    },
-                ];
+    beforeEach(function () {
+        var serviceStub = {
+            retrieveBooks: sinon.stub()
+        };
 
-    beforeEach(module('bookshelfApp'));
+        module('bookshelfApp', function ($provide) {
+            $provide.value('BooksApiService', serviceStub)
+        });
+
+        inject(function ($q) {
+            var deferred = $q.defer();
+            serviceStub.retrieveBooks.returns(deferred.promise);
+            deferred.resolve({data: books});
+        });
+    });
 
     it('should load the list of books and the shelve for the given user',
-        inject(function ($httpBackend, $controller) {
+        inject(function ($httpBackend, $controller, $q, BooksApiService) {
         var scope = {},
             username = 'c089';
 
-            $httpBackend.expectGET('/api/books').respond(books);
             $httpBackend.expectGET('/api/shelves/c089').respond([books[1]]);
 
             $controller('ShelveController', {
@@ -55,12 +68,11 @@ describe('ShelveController', function () {
         })
     );
 
-    it('can add a book to the shelf', inject(function($injector) {
+    it('can add a book to the shelf', inject(function($injector, $q, BooksApiService) {
         var $httpBackend = $injector.get('$httpBackend'),
             $controller = $injector.get('$controller');
             scope = { };
 
-        $httpBackend.expectGET('/api/books').respond(books);
         $httpBackend.expectGET('/api/shelves/c089').respond([]);
         $controller('ShelveController', {
             $scope: scope,
@@ -75,12 +87,11 @@ describe('ShelveController', function () {
 
     }));
 
-    it('can remove a book from the shelf', inject(function($injector) {
+    it('can remove a book from the shelf', inject(function($injector, $q, BooksApiService) {
         var $httpBackend = $injector.get('$httpBackend'),
             $controller = $injector.get('$controller'),
             scope = {};
 
-        $httpBackend.expectGET('/api/books').respond(books);
         $httpBackend.expectGET('/api/shelves/c089').respond([books[0]]);
         $controller('ShelveController', {
             $scope: scope,
@@ -92,6 +103,23 @@ describe('ShelveController', function () {
         scope.removeFromShelf(scope.books[0]);
         $httpBackend.flush();
         expect(scope.books[0].isOnShelf).to.be.false;
+    }));
+
+});
+
+describe('BooksApiService', function () {
+    var BooksApiService;
+
+    beforeEach(module('bookshelfApp'));
+
+    beforeEach(inject(function (_BooksApiService_) {
+        BooksApiService = _BooksApiService_;
+    }));
+
+    it('should allow to get all books', inject(function ($httpBackend) {
+        $httpBackend.expectGET('/api/books').respond(books);
+        BooksApiService.retrieveBooks();
+        $httpBackend.flush();
     }));
 
 });
