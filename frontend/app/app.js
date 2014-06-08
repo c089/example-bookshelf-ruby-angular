@@ -12,7 +12,7 @@ mod.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, BooksApiService) {
+mod.controller('ShelveController', function ($q, $routeParams, $scope, BooksApiService) {
     var shelfPath = function () {
             return '/api/shelves/' + $routeParams.userId;
         },
