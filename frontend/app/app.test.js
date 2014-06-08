@@ -59,13 +59,16 @@ describe('ShelveController', function () {
             };
 
             resolveWith(serviceStub.retrieveBooks, books);
-            resolveWith(serviceStub.retrieveShelf, [books[1]]);
+            resolveWith(serviceStub.retrieveShelf, []);
         });
     });
 
-    it('should load the list of books and the shelve for the given user', function () {
+    it('should add the isOnShelf property to the list of books', function () {
         var scope = {},
             username = 'c089';
+
+            resolveWith(BooksApiService.retrieveBooks, books);
+            resolveWith(BooksApiService.retrieveShelf, [books[1]]);
 
             $controller('ShelveController', {
                 $scope: scope,
