@@ -126,26 +126,24 @@ describe('BooksApiService', function () {
         BooksApiService = _BooksApiService_;
     }));
 
-    it('should allow to get all books', function(done) {
-        inject(function ($httpBackend) {
-            $httpBackend.expectGET('/api/books').respond(books);
-            BooksApiService.retrieveBooks().then(function (result) {
-                expect(result).to.deep.equal(books);
-                done();
-            });
-            $httpBackend.flush();
-        })
-    });
-
-    it('should allow to get a users shelf', function(done) {
-        inject(function ($httpBackend) {
-            $httpBackend.expectGET('/api/shelves/c089').respond(books);
-            BooksApiService.retrieveShelf('c089').then(function (result) {
-                expect(result).to.deep.equal(books);
-                done();
-            });
-            $httpBackend.flush();
+    it('should allow to get all books', inject(function ($httpBackend) {
+        var promise;
+        $httpBackend.expectGET('/api/books').respond(books);
+        promise = BooksApiService.retrieveBooks().then(function (result) {
+            expect(result).to.deep.equal(books);
         });
-    });
+        $httpBackend.flush();
+        return promise;
+    }));
+
+    it('should allow to get a users shelf', inject(function ($httpBackend) {
+        var promise;
+        $httpBackend.expectGET('/api/shelves/c089').respond(books);
+        promise = BooksApiService.retrieveShelf('c089').then(function (result) {
+            expect(result).to.deep.equal(books);
+        });
+        $httpBackend.flush();
+        return promise;
+    }));
 
 });
