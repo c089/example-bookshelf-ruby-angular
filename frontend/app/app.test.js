@@ -64,16 +64,12 @@ describe('ShelveController', function () {
     });
 
     it('should add the isOnShelf property to the list of books', function () {
-        var scope = {},
-            username = 'c089';
+        var scope = {};
 
             resolveWith(BooksApiService.retrieveBooks, books);
             resolveWith(BooksApiService.retrieveShelf, [books[1]]);
 
-            $controller('ShelveController', {
-                $scope: scope,
-                $routeParams: { userId: username }
-            });
+            $controller('ShelveController', { $scope: scope, });
             $rootScope.$apply();
 
             expect(scope.books[0].id).to.equal('1');
