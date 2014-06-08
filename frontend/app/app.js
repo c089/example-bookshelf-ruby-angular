@@ -13,10 +13,7 @@ mod.config(['$routeProvider', function($routeProvider) {
 }]);
 
 mod.controller('ShelveController', function ($q, $routeParams, $scope, BooksApiService) {
-    var shelfPath = function () {
-            return '/api/shelves/' + $routeParams.userId;
-        },
-        sendShelfToServer = function () {
+    var sendShelfToServer = function () {
             var booksOnShelf = _.chain($scope.books)
                 .where({isOnShelf: true})
                 .map(function (x) { return _.omit(x, 'isOnShelf'); })
