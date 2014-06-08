@@ -49,9 +49,16 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, Bo
 });
 
 mod.factory('BooksApiService', ['$http', function ($http) {
+    var shelfPath = function (userId) {
+        return '/api/shelves/' + userId;
+    };
+
     return {
         retrieveBooks: function () {
             return $http.get('/api/books');
+        },
+        retrieveShelf: function(userId) {
+            return $http.get(shelfPath(userId))
         }
     };
 }]);

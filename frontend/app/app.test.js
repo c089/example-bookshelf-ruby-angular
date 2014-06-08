@@ -122,4 +122,10 @@ describe('BooksApiService', function () {
         $httpBackend.flush();
     }));
 
+    it('should allow to get a users shelf', inject(function ($httpBackend) {
+        $httpBackend.expectGET('/api/shelves/c089').respond(books);
+        BooksApiService.retrieveShelf('c089');
+        $httpBackend.flush();
+    }));
+
 });
