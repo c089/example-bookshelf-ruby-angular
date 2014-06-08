@@ -14,12 +14,12 @@ mod.config(['$routeProvider', function($routeProvider) {
 
 mod.controller('ShelveController', function ($q, $routeParams, $scope, BooksApiService) {
     var sendShelfToServer = function () {
-            var booksOnShelf = _.chain($scope.books)
-                .where({isOnShelf: true})
-                .map(function (x) { return _.omit(x, 'isOnShelf'); })
-                .value();
-            BooksApiService.updateShelf($routeParams.userId, booksOnShelf);
-        };
+        var booksOnShelf = _.chain($scope.books)
+            .where({isOnShelf: true})
+            .map(function (x) { return _.omit(x, 'isOnShelf'); })
+            .value();
+        BooksApiService.updateShelf($routeParams.userId, booksOnShelf);
+    };
 
     $scope.addToShelf = function (book) {
         book.isOnShelf = true;
