@@ -32,7 +32,7 @@ describe('bookshelf frontend app', function () {
 describe('ShelveController', function () {
     var $controller,
         $rootScope,
-        BooksApiService,
+        api,
         resolveWith;
 
     beforeEach(function () {
@@ -50,7 +50,7 @@ describe('ShelveController', function () {
             var $q = $injector.get('$q');
             $controller = $injector.get('$controller');
             $rootScope = $injector.get('$rootScope');
-            BooksApiService = $injector.get('BooksApiService');
+            api = $injector.get('BooksApiService');
 
             resolveWith = function resolveWith(stub, result) {
                 var deferred = $q.defer();
@@ -66,8 +66,8 @@ describe('ShelveController', function () {
     it('should add the isOnShelf property to the list of books', function () {
         var scope = {};
 
-            resolveWith(BooksApiService.retrieveBooks, books);
-            resolveWith(BooksApiService.retrieveShelf, [books[1]]);
+            resolveWith(api.retrieveBooks, books);
+            resolveWith(api.retrieveShelf, [books[1]]);
 
             $controller('ShelveController', { $scope: scope, });
             $rootScope.$apply();
@@ -84,7 +84,7 @@ describe('ShelveController', function () {
     it('can add a book to the shelf', function() {
         var scope = { };
 
-        resolveWith(BooksApiService.retrieveShelf, []);
+        resolveWith(api.retrieveShelf, []);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
@@ -93,8 +93,8 @@ describe('ShelveController', function () {
 
         scope.addToShelf(scope.books[0]);
 
-        expect(BooksApiService.updateShelf).to.have.been.calledOnce;
-        expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', [books[0]]);
+        expect(api.updateShelf).to.have.been.calledOnce;
+        expect(api.updateShelf).to.have.been.calledWith('c089', [books[0]]);
         expect(scope.books[0].isOnShelf).to.be.true;
 
     });
@@ -102,7 +102,7 @@ describe('ShelveController', function () {
     it('can remove a book from the shelf', function () {
         var scope = {};
 
-        resolveWith(BooksApiService.retrieveShelf, [books[0]]);
+        resolveWith(api.retrieveShelf, [books[0]]);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
@@ -111,26 +111,26 @@ describe('ShelveController', function () {
 
         scope.removeFromShelf(scope.books[0]);
 
-        expect(BooksApiService.updateShelf).to.have.been.calledOnce;
-        expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', []);
+        expect(api.updateShelf).to.have.been.calledOnce;
+        expect(api.updateShelf).to.have.been.calledWith('c089', []);
         expect(scope.books[0].isOnShelf).to.be.false;
     });
 
 });
 
 describe('BooksApiService', function () {
-    var BooksApiService;
+    var api;
 
     beforeEach(module('bookshelfApp'));
 
-    beforeEach(inject(function (_BooksApiService_) {
-        BooksApiService = _BooksApiService_;
+    beforeEach(inject(function (BooksApiService) {
+        api = BooksApiService;
     }));
 
     it('should allow to get all books', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/books').respond(books);
-        promise = BooksApiService.retrieveBooks().then(function (result) {
+        promise = api.retrieveBooks().then(function (result) {
             expect(result).to.deep.equal(books);
         });
         $httpBackend.flush();
@@ -140,7 +140,7 @@ describe('BooksApiService', function () {
     it('should allow to get a users shelf', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/shelves/c089').respond(books);
-        promise = BooksApiService.retrieveShelf('c089').then(function (result) {
+        promise = api.retrieveShelf('c089').then(function (result) {
             expect(result).to.deep.equal(books);
         });
         $httpBackend.flush();
@@ -149,7 +149,7 @@ describe('BooksApiService', function () {
 
     it('can update a users shelf', inject(function ($httpBackend) {
         $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
-        BooksApiService.updateShelf('c089', [books[0]]);
+        api.updateShelf('c089', [books[0]]);
         $httpBackend.flush();
     }));
 
