@@ -17,8 +17,11 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, Bo
             return '/api/shelves/' + $routeParams.userId;
         },
         sendShelfToServer = function () {
-            var booksOnShelf = _($scope.books).where({isOnShelf: true});
-            $http.put(shelfPath(), _.pluck(booksOnShelf, 'id'));
+            var booksOnShelf = _.chain($scope.books)
+                .where({isOnShelf: true})
+                .map(function (x) { return _.omit(x, 'isOnShelf'); })
+                .value();
+            BooksApiService.updateShelf($routeParams.userId, booksOnShelf);
         };
 
     $scope.addToShelf = function (book) {

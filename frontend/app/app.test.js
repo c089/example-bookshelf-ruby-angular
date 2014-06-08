@@ -32,7 +32,8 @@ describe('ShelveController', function () {
     beforeEach(function () {
         var serviceStub = {
             retrieveBooks: sinon.stub(),
-            retrieveShelf: sinon.stub()
+            retrieveShelf: sinon.stub(),
+            updateShelf: sinon.stub()
         };
 
         module('bookshelfApp', function ($provide) {
@@ -71,8 +72,7 @@ describe('ShelveController', function () {
     );
 
     it('can add a book to the shelf', inject(function($injector, $q, BooksApiService) {
-        var $httpBackend = $injector.get('$httpBackend'),
-            $controller = $injector.get('$controller');
+        var $controller = $injector.get('$controller');
             $rootScope = $injector.get('$rootScope'),
             shelfDeferred = $q.defer(),
             scope = { };
@@ -85,16 +85,16 @@ describe('ShelveController', function () {
         });
         $rootScope.$apply();
 
-        $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
         scope.addToShelf(scope.books[0]);
-        $httpBackend.flush();
+
+        expect(BooksApiService.updateShelf).to.have.been.calledOnce;
+        expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', [books[0]]);
         expect(scope.books[0].isOnShelf).to.be.true;
 
     }));
 
     it('can remove a book from the shelf', inject(function($injector) {
-        var $httpBackend = $injector.get('$httpBackend'),
-            $controller = $injector.get('$controller'),
+        var $controller = $injector.get('$controller'),
             $rootScope = $injector.get('$rootScope'),
             $q = $injector.get('$q'),
             BooksApiService = $injector.get('BooksApiService'),
@@ -109,9 +109,10 @@ describe('ShelveController', function () {
         });
         $rootScope.$apply();
 
-        $httpBackend.expectPUT('/api/shelves/c089', []).respond(200);
         scope.removeFromShelf(scope.books[0]);
-        $httpBackend.flush();
+
+        expect(BooksApiService.updateShelf).to.have.been.calledOnce;
+        expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', []);
         expect(scope.books[0].isOnShelf).to.be.false;
     }));
 
