@@ -28,7 +28,10 @@ describe('bookshelf frontend app', function () {
 });
 
 describe('ShelveController', function () {
-    var resolveWith;
+    var $controller,
+        $rootScope,
+        BooksApiService,
+        resolveWith;
 
     beforeEach(function () {
         var serviceStub = {
@@ -41,7 +44,11 @@ describe('ShelveController', function () {
             $provide.value('BooksApiService', serviceStub)
         });
 
-        inject(function ($q) {
+        inject(function ($q, _$controller_, _$rootScope_, _BooksApiService_) {
+            $controller = _$controller_;
+            $rootScope = _$rootScope_;
+            BooksApiService = _BooksApiService_;
+
             resolveWith = function resolveWith(stub, result) {
                 var deferred = $q.defer();
                 stub.returns(deferred.promise);
@@ -53,8 +60,7 @@ describe('ShelveController', function () {
         });
     });
 
-    it('should load the list of books and the shelve for the given user',
-        inject(function ($rootScope, $controller, BooksApiService) {
+    it('should load the list of books and the shelve for the given user', function () {
         var scope = {},
             username = 'c089';
 
@@ -70,13 +76,11 @@ describe('ShelveController', function () {
             expect(scope.books[1].isOnShelf).to.be.true;
             expect(scope.books[2].id).to.equal('3');
             expect(scope.books[2].isOnShelf).to.be.false;
-        })
+        }
     );
 
-    it('can add a book to the shelf', inject(function($injector, BooksApiService) {
-        var $controller = $injector.get('$controller');
-            $rootScope = $injector.get('$rootScope'),
-            scope = { };
+    it('can add a book to the shelf', function() {
+        var scope = { };
 
         resolveWith(BooksApiService.retrieveShelf, []);
         $controller('ShelveController', {
@@ -91,13 +95,10 @@ describe('ShelveController', function () {
         expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', [books[0]]);
         expect(scope.books[0].isOnShelf).to.be.true;
 
-    }));
+    });
 
-    it('can remove a book from the shelf', inject(function($injector) {
-        var $controller = $injector.get('$controller'),
-            $rootScope = $injector.get('$rootScope'),
-            BooksApiService = $injector.get('BooksApiService'),
-            scope = {};
+    it('can remove a book from the shelf', function () {
+        var scope = {};
 
         resolveWith(BooksApiService.retrieveShelf, [books[0]]);
         $controller('ShelveController', {
@@ -111,7 +112,7 @@ describe('ShelveController', function () {
         expect(BooksApiService.updateShelf).to.have.been.calledOnce;
         expect(BooksApiService.updateShelf).to.have.been.calledWith('c089', []);
         expect(scope.books[0].isOnShelf).to.be.false;
-    }));
+    });
 
 });
 
