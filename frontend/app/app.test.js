@@ -1,3 +1,5 @@
+/* jshint -W030 */
+
 var expect = chai.expect,
     books = [
         {
