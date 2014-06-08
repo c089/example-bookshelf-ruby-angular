@@ -31,7 +31,8 @@ describe('ShelveController', function () {
 
     beforeEach(function () {
         var serviceStub = {
-            retrieveBooks: sinon.stub()
+            retrieveBooks: sinon.stub(),
+            retrieveShelf: sinon.stub()
         };
 
         module('bookshelfApp', function ($provide) {
@@ -42,22 +43,23 @@ describe('ShelveController', function () {
             var deferred = $q.defer();
             serviceStub.retrieveBooks.returns(deferred.promise);
             deferred.resolve({data: books});
+
+            var deferred2 = $q.defer();
+            serviceStub.retrieveShelf.returns(deferred2.promise);
+            deferred2.resolve({data: [books[1]]});
         });
     });
 
     it('should load the list of books and the shelve for the given user',
-        inject(function ($httpBackend, $controller, $q, BooksApiService) {
+        inject(function ($rootScope, $controller, $q, BooksApiService) {
         var scope = {},
             username = 'c089';
-
-            $httpBackend.expectGET('/api/shelves/c089').respond([books[1]]);
 
             $controller('ShelveController', {
                 $scope: scope,
                 $routeParams: { userId: username }
             });
-
-            $httpBackend.flush();
+            $rootScope.$apply();
 
             expect(scope.books[0].id).to.equal('1');
             expect(scope.books[0].isOnShelf).to.be.false;
@@ -71,14 +73,17 @@ describe('ShelveController', function () {
     it('can add a book to the shelf', inject(function($injector, $q, BooksApiService) {
         var $httpBackend = $injector.get('$httpBackend'),
             $controller = $injector.get('$controller');
+            $rootScope = $injector.get('$rootScope'),
+            shelfDeferred = $q.defer(),
             scope = { };
 
-        $httpBackend.expectGET('/api/shelves/c089').respond([]);
+        BooksApiService.retrieveShelf.returns(shelfDeferred.promise);
+        shelfDeferred.resolve([]);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
         });
-        $httpBackend.flush();
+        $rootScope.$apply();
 
         $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
         scope.addToShelf(scope.books[0]);
@@ -87,17 +92,22 @@ describe('ShelveController', function () {
 
     }));
 
-    it('can remove a book from the shelf', inject(function($injector, $q, BooksApiService) {
+    it('can remove a book from the shelf', inject(function($injector) {
         var $httpBackend = $injector.get('$httpBackend'),
             $controller = $injector.get('$controller'),
+            $rootScope = $injector.get('$rootScope'),
+            $q = $injector.get('$q'),
+            BooksApiService = $injector.get('BooksApiService'),
+            shelfDeferred = $q.defer(),
             scope = {};
 
-        $httpBackend.expectGET('/api/shelves/c089').respond([books[0]]);
+        BooksApiService.retrieveShelf.returns(shelfDeferred.promise);
+        shelfDeferred.resolve([books[0]]);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
         });
-        $httpBackend.flush();
+        $rootScope.$apply();
 
         $httpBackend.expectPUT('/api/shelves/c089', []).respond(200);
         scope.removeFromShelf(scope.books[0]);

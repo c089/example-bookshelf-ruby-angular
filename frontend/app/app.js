@@ -33,7 +33,7 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, Bo
 
     $q.all([
         BooksApiService.retrieveBooks(),
-        $http.get(shelfPath())
+        BooksApiService.retrieveShelf($routeParams.userId)
     ]).then(function (results) {
         var allBooks = results[0].data;
         var booksOnShelve = results[1].data;
