@@ -146,4 +146,10 @@ describe('BooksApiService', function () {
         return promise;
     }));
 
+    it('can update a users shelf', inject(function ($httpBackend) {
+        $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
+        BooksApiService.updateShelf('c089', [books[0]]);
+        $httpBackend.flush();
+    }));
+
 });

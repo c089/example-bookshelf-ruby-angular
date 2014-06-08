@@ -63,6 +63,10 @@ mod.factory('BooksApiService', ['$http', function ($http) {
             return $http.get(shelfPath(userId)).then(function (result) {
                 return result.data;
             });
+        },
+        updateShelf: function(userId, books) {
+            return $http.put(shelfPath(userId), _.pluck(books, 'id'));
         }
+
     };
 }]);
