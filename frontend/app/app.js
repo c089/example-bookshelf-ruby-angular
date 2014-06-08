@@ -35,8 +35,8 @@ mod.controller('ShelveController', function ($http, $q, $routeParams, $scope, Bo
         BooksApiService.retrieveBooks(),
         BooksApiService.retrieveShelf($routeParams.userId)
     ]).then(function (results) {
-        var allBooks = results[0].data;
-        var booksOnShelve = results[1].data;
+        var allBooks = results[0];
+        var booksOnShelve = results[1];
 
         $scope.books = _.map(allBooks, function (book) {
             var idsOfBooksOnShelve = _.pluck(booksOnShelve, 'id');
@@ -55,10 +55,14 @@ mod.factory('BooksApiService', ['$http', function ($http) {
 
     return {
         retrieveBooks: function () {
-            return $http.get('/api/books');
+            return $http.get('/api/books').then(function (result) {
+                return result.data;
+            });
         },
         retrieveShelf: function(userId) {
-            return $http.get(shelfPath(userId))
+            return $http.get(shelfPath(userId)).then(function (result) {
+                return result.data;
+            });
         }
     };
 }]);

@@ -42,11 +42,11 @@ describe('ShelveController', function () {
         inject(function ($q) {
             var deferred = $q.defer();
             serviceStub.retrieveBooks.returns(deferred.promise);
-            deferred.resolve({data: books});
+            deferred.resolve(books);
 
             var deferred2 = $q.defer();
             serviceStub.retrieveShelf.returns(deferred2.promise);
-            deferred2.resolve({data: [books[1]]});
+            deferred2.resolve([books[1]]);
         });
     });
 
@@ -126,16 +126,26 @@ describe('BooksApiService', function () {
         BooksApiService = _BooksApiService_;
     }));
 
-    it('should allow to get all books', inject(function ($httpBackend) {
-        $httpBackend.expectGET('/api/books').respond(books);
-        BooksApiService.retrieveBooks();
-        $httpBackend.flush();
-    }));
+    it('should allow to get all books', function(done) {
+        inject(function ($httpBackend) {
+            $httpBackend.expectGET('/api/books').respond(books);
+            BooksApiService.retrieveBooks().then(function (result) {
+                expect(result).to.deep.equal(books);
+                done();
+            });
+            $httpBackend.flush();
+        })
+    });
 
-    it('should allow to get a users shelf', inject(function ($httpBackend) {
-        $httpBackend.expectGET('/api/shelves/c089').respond(books);
-        BooksApiService.retrieveShelf('c089');
-        $httpBackend.flush();
-    }));
+    it('should allow to get a users shelf', function(done) {
+        inject(function ($httpBackend) {
+            $httpBackend.expectGET('/api/shelves/c089').respond(books);
+            BooksApiService.retrieveShelf('c089').then(function (result) {
+                expect(result).to.deep.equal(books);
+                done();
+            });
+            $httpBackend.flush();
+        });
+    });
 
 });
