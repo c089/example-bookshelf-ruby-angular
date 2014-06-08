@@ -28,6 +28,7 @@ describe('bookshelf frontend app', function () {
 });
 
 describe('ShelveController', function () {
+    var resolveWith;
 
     beforeEach(function () {
         var serviceStub = {
@@ -41,18 +42,19 @@ describe('ShelveController', function () {
         });
 
         inject(function ($q) {
-            var deferred = $q.defer();
-            serviceStub.retrieveBooks.returns(deferred.promise);
-            deferred.resolve(books);
+            resolveWith = function resolveWith(stub, result) {
+                var deferred = $q.defer();
+                stub.returns(deferred.promise);
+                deferred.resolve(result);
+            }
 
-            var deferred2 = $q.defer();
-            serviceStub.retrieveShelf.returns(deferred2.promise);
-            deferred2.resolve([books[1]]);
+            resolveWith(serviceStub.retrieveBooks, books);
+            resolveWith(serviceStub.retrieveShelf, [books[1]]);
         });
     });
 
     it('should load the list of books and the shelve for the given user',
-        inject(function ($rootScope, $controller, $q, BooksApiService) {
+        inject(function ($rootScope, $controller, BooksApiService) {
         var scope = {},
             username = 'c089';
 
@@ -71,14 +73,12 @@ describe('ShelveController', function () {
         })
     );
 
-    it('can add a book to the shelf', inject(function($injector, $q, BooksApiService) {
+    it('can add a book to the shelf', inject(function($injector, BooksApiService) {
         var $controller = $injector.get('$controller');
             $rootScope = $injector.get('$rootScope'),
-            shelfDeferred = $q.defer(),
             scope = { };
 
-        BooksApiService.retrieveShelf.returns(shelfDeferred.promise);
-        shelfDeferred.resolve([]);
+        resolveWith(BooksApiService.retrieveShelf, []);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
@@ -96,13 +96,10 @@ describe('ShelveController', function () {
     it('can remove a book from the shelf', inject(function($injector) {
         var $controller = $injector.get('$controller'),
             $rootScope = $injector.get('$rootScope'),
-            $q = $injector.get('$q'),
             BooksApiService = $injector.get('BooksApiService'),
-            shelfDeferred = $q.defer(),
             scope = {};
 
-        BooksApiService.retrieveShelf.returns(shelfDeferred.promise);
-        shelfDeferred.resolve([books[0]]);
+        resolveWith(BooksApiService.retrieveShelf, [books[0]]);
         $controller('ShelveController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
