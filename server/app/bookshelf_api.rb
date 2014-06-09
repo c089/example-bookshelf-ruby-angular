@@ -14,6 +14,24 @@ class BooksRepository
         getBooksFromEsResponse(result)
     end
 
+    def get_shelf(userId)
+        shelf = @es.get(
+            :index => 'bookshelf',
+            :type => 'shelves',
+            :id => userId)
+
+        books = @es.search(
+            :index => 'bookshelf',
+            :type => 'books',
+            :body => {
+                :filter => {
+                    :ids => { :values => shelf['_source']['books']}
+               }
+            })
+
+        getBooksFromEsResponse(books)
+    end
+
     def getBooksFromEsResponse(response)
         response['hits']['hits'].map { |hit|
             s = hit['_source']

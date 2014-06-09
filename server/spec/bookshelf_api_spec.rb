@@ -47,6 +47,31 @@ describe 'Bookshelf API server' do
             end
         end
 
+        describe 'get_shelf' do
+            it 'loads all books from a users shelf' do
+                ids = ['i1', 'i2']
+                expect(esClient).to receive(:get)
+                    .with(:index => 'bookshelf',
+                          :type => 'shelves',
+                          :id => 'bestuserever')
+                    .and_return({ '_source' => { 'books' => ids}})
+
+                expect(esClient).to receive(:search)
+                    .with(:index => 'bookshelf',
+                          :type => 'books',
+                          :body => {
+                              :filter => {
+                                  :ids => { :values => ids }
+                             }
+                          })
+                   .and_return(esBooksResponse)
+
+                books = repo.get_shelf('bestuserever')
+
+                expect(books).to eq(booksInApiFormat)
+            end
+        end
+
     end
 
     describe 'the sintra app' do
