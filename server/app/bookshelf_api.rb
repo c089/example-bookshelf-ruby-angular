@@ -6,6 +6,8 @@ class BookshelfApi < Sinatra::Application
     configure do
         # abusing sinatras settings to inject dependency from tests
         set :esClient => (Elasticsearch::Client.new log: true)
+
+        set :public_folder => '../frontend/'
     end
 
     def initialize(app=nil)
