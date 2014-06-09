@@ -50,14 +50,9 @@ class BookshelfApi < Sinatra::Application
         set :public_folder => '../frontend/'
     end
 
-    def initialize(app=nil)
-        super(app)
-        @repo = settings.booksRepository
-    end
-
     get '/api/books' do
         content_type :json
-        @repo.all_books.to_json
+        settings.booksRepository.all_books.to_json
     end
 
     run! if app_file == $0
