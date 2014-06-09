@@ -68,7 +68,7 @@ describe 'Bookshelf API server' do
 
     end
 
-    describe 'the sintra app' do
+    describe BookshelfApi do
 
         include Rack::Test::Methods
 
@@ -83,14 +83,18 @@ describe 'Bookshelf API server' do
             BookshelfApi.set :booksRepository => repo
         }
 
-        it 'get /api/books returns a list of all books' do
-            expect(repo).to receive(:all_books).and_return(booksInApiFormat)
+        describe 'GET /api/books' do
+            it 'get /api/books returns a list of all books' do
+                expect(repo)
+                    .to receive(:all_books)
+                    .and_return(booksInApiFormat)
 
-            get '/api/books'
+                get '/api/books'
 
-            expect(last_response).to be_ok
-            expect(last_response.content_type).to eq('application/json')
-            expect(last_response.body).to eq(booksInApiFormat.to_json)
+                expect(last_response).to be_ok
+                expect(last_response.content_type).to eq('application/json')
+                expect(last_response.body).to eq(booksInApiFormat.to_json)
+            end
         end
 
         describe 'GET /api/shelves/:userId' do
