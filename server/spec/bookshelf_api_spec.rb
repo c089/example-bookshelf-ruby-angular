@@ -4,21 +4,6 @@ require 'sinatra'
 require_relative '../app/bookshelf_api'
 
 describe 'Bookshelf API server' do
-    let(:esClient) { double(Elasticsearch::Client) }
-
-    let(:esBooksResponse) {
-        return {
-            'hits' => {
-                'total' => 2,
-                'hits' => [
-                   { '_id' => 'i1', '_source' =>
-                     { 'title' => 't1', 'author' => 'a1' } },
-                   { '_id' => 'i2', '_source' =>
-                     { 'title' => 't2', 'author' => 'a2' } },
-                ]
-            }
-        }
-    }
 
     let(:booksInApiFormat) {
         [ { id: 'i1', title: 't1', author: 'a1' },
@@ -27,6 +12,20 @@ describe 'Bookshelf API server' do
 
     describe BooksRepository do
         let(:repo) { BooksRepository.new esClient }
+        let(:esClient) { double(Elasticsearch::Client) }
+        let(:esBooksResponse) {
+            return {
+                'hits' => {
+                    'total' => 2,
+                    'hits' => [
+                       { '_id' => 'i1', '_source' =>
+                         { 'title' => 't1', 'author' => 'a1' } },
+                       { '_id' => 'i2', '_source' =>
+                         { 'title' => 't2', 'author' => 'a2' } },
+                    ]
+                }
+            }
+        }
 
         describe 'all_books' do
             it 'uses a match all search to get all books' do
