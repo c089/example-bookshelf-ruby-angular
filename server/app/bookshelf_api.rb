@@ -2,23 +2,44 @@ require 'sinatra/base'
 require 'elasticsearch'
 require 'json'
 
+class BooksRepository
+    def initialize(esClient)
+        @es = esClient
+    end
+
+    def all_books
+        result = @es.search(
+            :index => 'bookshelf',
+            :type => 'books')
+        getBooksFromEsResponse(result)
+    end
+
+    def getBooksFromEsResponse(response)
+        response['hits']['hits'].map { |hit|
+            s = hit['_source']
+            { id: hit['_id'], title: s['title'], author: s['author'] }
+        }
+    end
+
+end
+
 class BookshelfApi < Sinatra::Application
     configure do
         # abusing sinatras settings to inject dependency from tests
-        set :esClient => (Elasticsearch::Client.new log: true)
+        esClient = (Elasticsearch::Client.new log: true)
+        set :booksRepository => (BooksRepository.new esClient)
 
         set :public_folder => '../frontend/'
     end
 
     def initialize(app=nil)
         super(app)
-        @esClient = settings.esClient
+        @repo = settings.booksRepository
     end
 
     get '/api/books' do
         content_type :json
-        esResponse = @esClient.search :index => 'bookshelf', :type => 'books'
-        getBooksFromEsResponse(esResponse).to_json
+        @repo.all_books.to_json
     end
 
     def getBooksFromEsResponse(response)

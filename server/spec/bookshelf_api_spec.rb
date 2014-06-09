@@ -3,16 +3,12 @@ require 'rack/test'
 require 'sinatra'
 require_relative '../app/bookshelf_api'
 
-describe 'bookshelf API' do
+describe 'Bookshelf API server' do
     include Rack::Test::Methods
 
     def app
         BookshelfApi
     end
-
-    before(:each) {
-        BookshelfApi.set :esClient => es
-    }
 
     let(:es) { double(Elasticsearch::Client) }
 
@@ -30,23 +26,46 @@ describe 'bookshelf API' do
         }
     }
 
+    let(:booksInApiFormat) {
+        [ { id: 'i1', title: 't1', author: 'a1' },
+          { id: 'i2', title: 't2', author: 'a2' } ]
+    }
 
-    it 'get /api/books returns a list of all books' do
-        allow(es)
-            .to receive(:search).with({
-                :index => 'bookshelf',
-                :type => 'books'
-            })
-            .and_return(esBooksResponse)
+    describe BooksRepository do
+        let(:repo) { BooksRepository.new es }
 
-        get '/api/books'
+        describe 'all_books' do
+            it 'uses a match all search to get all books' do
+                expect(es)
+                    .to receive(:search).with({
+                        :index => 'bookshelf',
+                        :type => 'books'
+                    })
+                    .and_return(esBooksResponse)
 
-        expect(last_response).to be_ok
-        expect(last_response.content_type).to eq('application/json')
-        expect(JSON.parse(last_response.body)).to eq([
-                { 'id' => 'i1', 'title' => 't1', 'author' => 'a1' },
-                { 'id' => 'i2', 'title' => 't2', 'author' => 'a2' }
-        ])
+                expect(repo.all_books).to eq(booksInApiFormat)
+            end
+        end
+
+    end
+
+    describe 'the sintra app' do
+
+        let(:repo) { BooksRepository.new es }
+
+        before(:each) {
+            BookshelfApi.set :booksRepository => repo
+        }
+
+        it 'get /api/books returns a list of all books' do
+            expect(repo).to receive(:all_books).and_return(booksInApiFormat)
+
+            get '/api/books'
+
+            expect(last_response).to be_ok
+            expect(last_response.content_type).to eq('application/json')
+            expect(last_response.body).to eq(booksInApiFormat.to_json)
+        end
     end
 
 end
