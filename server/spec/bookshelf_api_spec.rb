@@ -4,12 +4,6 @@ require 'sinatra'
 require_relative '../app/bookshelf_api'
 
 describe 'Bookshelf API server' do
-    include Rack::Test::Methods
-
-    def app
-        BookshelfApi
-    end
-
     let(:esClient) { double(Elasticsearch::Client) }
 
     let(:esBooksResponse) {
@@ -75,6 +69,13 @@ describe 'Bookshelf API server' do
     end
 
     describe 'the sintra app' do
+
+        include Rack::Test::Methods
+
+        def app
+            BookshelfApi
+        end
+
 
         let(:repo) { double(BooksRepository) }
 
