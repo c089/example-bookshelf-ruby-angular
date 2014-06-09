@@ -63,6 +63,13 @@ describe 'Bookshelf API server' do
 
                 expect(books).to eq(booksInApiFormat)
             end
+
+            it 'returns empty list if the user does not have a shelf yet' do
+                expect(esClient).to receive(:get).and_raise(
+                    Elasticsearch::Transport::Transport::Errors::NotFound)
+
+                expect(repo.get_shelf('iamanewuser')).to eq []
+            end
         end
 
     end

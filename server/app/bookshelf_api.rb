@@ -30,6 +30,8 @@ class BooksRepository
             })
 
         getBooksFromEsResponse(books)
+    rescue Elasticsearch::Transport::Transport::Errors::NotFound
+        []
     end
 
     def getBooksFromEsResponse(response)
