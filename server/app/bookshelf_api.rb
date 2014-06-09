@@ -34,6 +34,8 @@ class BooksRepository
         []
     end
 
+    private
+
     def getBooksFromEsResponse(response)
         response['hits']['hits'].map { |hit|
             s = hit['_source']
