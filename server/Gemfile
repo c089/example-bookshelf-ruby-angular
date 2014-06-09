@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'autotest'
+gem 'rspec'
+gem 'rspec-autotest'
+gem 'sinatra'
+gem 'elasticsearch'
