@@ -76,7 +76,7 @@ describe 'Bookshelf API server' do
 
     describe 'the sintra app' do
 
-        let(:repo) { BooksRepository.new esClient }
+        let(:repo) { double(BooksRepository) }
 
         before(:each) {
             BookshelfApi.set :booksRepository => repo
