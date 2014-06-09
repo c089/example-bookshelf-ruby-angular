@@ -34,6 +34,13 @@ class BooksRepository
         []
     end
 
+    def update_shelf(userId, bookIds)
+        @es.index(:index => 'bookshelf',
+                  :type => 'shelves',
+                  :id => userId,
+                  :body => { :books => bookIds })
+    end
+
     private
 
     def getBooksFromEsResponse(response)

@@ -72,6 +72,22 @@ describe 'Bookshelf API server' do
             end
         end
 
+        describe 'update_shelf' do
+            it 'sends the new shelf data to elasticsearch' do
+                userId = 'foo'
+                bookIds = ['i1', 'i2']
+
+                expect(esClient)
+                    .to receive(:index)
+                    .with(:index => 'bookshelf',
+                          :type => 'shelves',
+                          :id => userId,
+                          :body => { :books => bookIds })
+
+                repo.update_shelf(userId, bookIds)
+            end
+        end
+
     end
 
     describe BookshelfApi do
