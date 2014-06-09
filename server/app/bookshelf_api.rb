@@ -60,12 +60,5 @@ class BookshelfApi < Sinatra::Application
         @repo.all_books.to_json
     end
 
-    def getBooksFromEsResponse(response)
-        response['hits']['hits'].map { |hit|
-            s = hit['_source']
-            { id: hit['_id'], title: s['title'], author: s['author'] }
-        }
-    end
-
     run! if app_file == $0
 end
