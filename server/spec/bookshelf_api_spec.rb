@@ -116,6 +116,19 @@ describe 'Bookshelf API server' do
                 expect(last_response.body).to eq(booksInApiFormat.to_json)
             end
         end
+
+        describe 'PUT /api/shelves/:userId' do
+            it 'updates the shelf' do
+                username = 'x'
+                ids = ['a', 'b', 'c']
+
+                expect(repo).to receive(:update_shelf).with(username, ids)
+
+                put '/api/shelves/' + username, ids.to_json
+
+                expect(last_response.status).to eq(204)
+            end
+        end
     end
 
 end
