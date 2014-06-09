@@ -10,7 +10,7 @@ describe 'Bookshelf API server' do
         BookshelfApi
     end
 
-    let(:es) { double(Elasticsearch::Client) }
+    let(:esClient) { double(Elasticsearch::Client) }
 
     let(:esBooksResponse) {
         return {
@@ -32,11 +32,11 @@ describe 'Bookshelf API server' do
     }
 
     describe BooksRepository do
-        let(:repo) { BooksRepository.new es }
+        let(:repo) { BooksRepository.new esClient }
 
         describe 'all_books' do
             it 'uses a match all search to get all books' do
-                expect(es)
+                expect(esClient)
                     .to receive(:search).with({
                         :index => 'bookshelf',
                         :type => 'books'
@@ -51,7 +51,7 @@ describe 'Bookshelf API server' do
 
     describe 'the sintra app' do
 
-        let(:repo) { BooksRepository.new es }
+        let(:repo) { BooksRepository.new esClient }
 
         before(:each) {
             BookshelfApi.set :booksRepository => repo
