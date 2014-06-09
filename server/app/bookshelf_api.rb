@@ -55,5 +55,10 @@ class BookshelfApi < Sinatra::Application
         settings.booksRepository.all_books.to_json
     end
 
+    get '/api/shelves/:userId' do
+        content_type :json
+        settings.booksRepository.get_shelf(params['userId']).to_json
+    end
+
     run! if app_file == $0
 end

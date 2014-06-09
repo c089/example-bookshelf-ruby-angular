@@ -91,6 +91,20 @@ describe 'Bookshelf API server' do
             expect(last_response.content_type).to eq('application/json')
             expect(last_response.body).to eq(booksInApiFormat.to_json)
         end
+
+        describe 'GET /api/shelves/:userId' do
+            it 'loads books on users shelf' do
+                expect(repo)
+                    .to receive(:get_shelf).with('bestuserever')
+                    .and_return(booksInApiFormat)
+
+                get '/api/shelves/bestuserever'
+
+                expect(last_response).to be_ok
+                expect(last_response.content_type).to eq('application/json')
+                expect(last_response.body).to eq(booksInApiFormat.to_json)
+            end
+        end
     end
 
 end
