@@ -1,5 +1,9 @@
-angular.module('bookshelfApp.shelf', []).controller(
-        'ShelfController', 
+var mod = angular.module(
+        'bookshelfApp.shelf',
+        ['bookshelfApp.booksRepository']);
+
+mod.controller(
+        'ShelfController',
         function ($q, $routeParams, $scope, BooksRepository) {
     var sendShelfToServer = function () {
         var booksOnShelf = _.chain($scope.books)
