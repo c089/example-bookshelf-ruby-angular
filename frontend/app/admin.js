@@ -5,6 +5,7 @@ mod.controller('AdminController',
     function ($q, $routeParams, $scope, BooksRepository) {
         function updateBookList() {
             BooksRepository.retrieveBooks().then(function (books) {
+                $scope.book = {};
                 $scope.books = books;
             });
         }
