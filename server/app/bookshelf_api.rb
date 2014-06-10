@@ -10,7 +10,8 @@ class BooksRepository
     def all_books
         result = @es.search(
             :index => 'bookshelf',
-            :type => 'books')
+            :type => 'books',
+            :size => 9999)
         getBooksFromEsResponse(result)
     end
 
@@ -30,13 +31,14 @@ class BooksRepository
             :index => 'bookshelf',
             :type => 'shelves',
             :id => userId)
-
+        ids = shelf['_source']['books']
         books = @es.search(
             :index => 'bookshelf',
             :type => 'books',
+            :size => ids.count,
             :body => {
                 :filter => {
-                    :ids => { :values => shelf['_source']['books']}
+                    :ids => { :values => ids}
                }
             })
 

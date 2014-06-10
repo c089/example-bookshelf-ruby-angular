@@ -31,7 +31,8 @@ describe 'Bookshelf API server' do
                 expect(esClient)
                     .to receive(:search).with({
                         :index => 'bookshelf',
-                        :type => 'books'
+                        :type => 'books',
+                        :size => 9999
                     })
                     .and_return(esBooksResponse)
 
@@ -70,6 +71,7 @@ describe 'Bookshelf API server' do
                 expect(esClient).to receive(:search)
                     .with(:index => 'bookshelf',
                           :type => 'books',
+                          :size => 2,
                           :body => {
                               :filter => {
                                   :ids => { :values => ids }
