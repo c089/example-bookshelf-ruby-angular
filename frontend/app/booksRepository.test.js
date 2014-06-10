@@ -22,7 +22,7 @@ describe('BooksRepository', function () {
             bookData = { author: 'a', title: 't' },
             response = { data: _.extend({}, bookData, {id: 'generate'}) };
 
-        $httpBackend.expectPOST('/api/books').respond(response);
+        $httpBackend.expectPOST('/api/books', bookData).respond(response);
 
         promise = repo.createBook(bookData).then(function (result) {
             expect(result).to.deep.equal(response);
