@@ -20,6 +20,7 @@ class BooksRepository
             :index => 'bookshelf',
             :type => 'books',
             :body => book)
+        @es.indices.refresh :index=>'bookshelf'
 
         result = book.clone
         result[:id] = response[:_id]

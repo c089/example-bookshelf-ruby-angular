@@ -52,6 +52,8 @@ describe 'Bookshelf API server' do
                         created: true,
                         _id: 'generated_id'
                     })
+                expect(esClient).to receive_message_chain(:indices, :refresh)
+                    .with(:index => 'bookshelf')
 
                 new_book = repo.create_book(book)
                 expect(new_book[:id]).to eq('generated_id')
