@@ -10,6 +10,11 @@ angular.module('bookshelfApp.booksRepository', [])
                     return result.data;
                 });
             },
+            createBook: function (bookData) {
+                return $http.post('/api/books').then(function (result) {
+                    return result.data;
+                });
+            },
             retrieveShelf: function(userId) {
                 return $http.get(shelfPath(userId)).then(function (result) {
                     return result.data;

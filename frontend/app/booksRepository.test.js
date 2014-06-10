@@ -17,6 +17,21 @@ describe('BooksRepository', function () {
         return promise;
     }));
 
+    it('can create a new books', inject(function ($httpBackend) {
+        var promise,
+            bookData = { author: 'a', title: 't' },
+            response = { data: _.extend({}, bookData, {id: 'generate'}) };
+
+        $httpBackend.expectPOST('/api/books').respond(response);
+
+        promise = repo.createBook(bookData).then(function (result) {
+            expect(result).to.deep.equal(response);
+        });
+
+        $httpBackend.flush();
+        return promise;
+    }));
+
     it('should allow to get a users shelf', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/shelves/c089').respond(books);
