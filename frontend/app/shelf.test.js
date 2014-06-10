@@ -20,12 +20,7 @@ describe('ShelfController', function () {
             $controller = $injector.get('$controller');
             $rootScope = $injector.get('$rootScope');
             api = $injector.get('BooksRepository');
-
-            resolveWith = function resolveWith(stub, result) {
-                var deferred = $q.defer();
-                stub.returns(deferred.promise);
-                deferred.resolve(result);
-            };
+            resolveWith = $injector.get('resolveWith');
 
             resolveWith(serviceStub.retrieveBooks, books);
             resolveWith(serviceStub.retrieveShelf, []);

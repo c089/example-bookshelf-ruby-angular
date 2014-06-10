@@ -1,0 +1,12 @@
+<ul>
+    <li ng-repeat="book in books" />
+        {{book.title}} by {{book.author}}
+    </li>
+</ul>
+
+<form novalidate>
+    Author: <input type="text" ng-model="book.author" /><br />
+    Title: <input type="text" ng-model="book.title" /><br />
+    Image: <input type="text" ng-model="book.image" />
+    <button ng-click="addBook(book)">Add Book</button>
+</form>
