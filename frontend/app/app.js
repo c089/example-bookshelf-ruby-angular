@@ -4,7 +4,7 @@ mod.value('version', 'dev');
 mod.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/shelve/:userId', {
-            controller: 'ShelveController',
+            controller: 'ShelfController',
             templateUrl: 'shelve.html'
         })
         .otherwise({
@@ -12,7 +12,7 @@ mod.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-mod.controller('ShelveController', function ($q, $routeParams, $scope, BooksApiService) {
+mod.controller('ShelfController', function ($q, $routeParams, $scope, BooksApiService) {
     var sendShelfToServer = function () {
         var booksOnShelf = _.chain($scope.books)
             .where({isOnShelf: true})

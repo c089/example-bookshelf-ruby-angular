@@ -29,7 +29,7 @@ describe('bookshelf frontend app', function () {
     }));
 });
 
-describe('ShelveController', function () {
+describe('ShelfController', function () {
     var $controller,
         $rootScope,
         api,
@@ -69,7 +69,7 @@ describe('ShelveController', function () {
             resolveWith(api.retrieveBooks, books);
             resolveWith(api.retrieveShelf, [books[1]]);
 
-            $controller('ShelveController', { $scope: scope, });
+            $controller('ShelfController', { $scope: scope, });
             $rootScope.$apply();
 
             expect(scope.books[0].id).to.equal('1');
@@ -85,7 +85,7 @@ describe('ShelveController', function () {
         var scope = { };
 
         resolveWith(api.retrieveShelf, []);
-        $controller('ShelveController', {
+        $controller('ShelfController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
         });
@@ -103,7 +103,7 @@ describe('ShelveController', function () {
         var scope = {};
 
         resolveWith(api.retrieveShelf, [books[0]]);
-        $controller('ShelveController', {
+        $controller('ShelfController', {
             $scope: scope,
             $routeParams: { userId: 'c089' }
         });
