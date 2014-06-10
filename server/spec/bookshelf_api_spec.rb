@@ -4,7 +4,6 @@ require 'sinatra'
 require_relative '../app/bookshelf_api'
 
 describe 'Bookshelf API server' do
-
     let(:booksInApiFormat) {
         [ { id: 'i1', title: 't1', author: 'a1' },
           { id: 'i2', title: 't2', author: 'a2' } ]
@@ -38,6 +37,25 @@ describe 'Bookshelf API server' do
 
                 expect(repo.all_books).to eq(booksInApiFormat)
             end
+        end
+
+        describe 'create_book' do
+            it 'indexes the new book in elasticsearch' do
+                book = { title: 't', author: 'a', image: 'i' }
+
+                expect(esClient).to receive(:index)
+                    .with(:index => 'bookshelf',
+                          :type => 'books',
+                          :body => book)
+                    .and_return({
+                        created: true,
+                        _id: 'generated_id'
+                    })
+
+                new_book = repo.create_book(book)
+                expect(new_book[:id]).to eq('generated_id')
+            end
+
         end
 
         describe 'get_shelf' do
@@ -116,6 +134,29 @@ describe 'Bookshelf API server' do
                 expect(last_response).to be_ok
                 expect(last_response.content_type).to eq('application/json')
                 expect(last_response.body).to eq(booksInApiFormat.to_json)
+            end
+        end
+
+        describe 'POST /api/books' do
+            def stringify_keys(x)
+                JSON.parse(x.to_json)
+            end
+
+            it 'creates a new book' do
+                book = { title: 't', author: 'a', image: 'i' }
+                bookWithId = book.clone
+                bookWithId['id'] =  'i'
+
+                expect(repo)
+                    .to receive(:create_book)
+                    .with(stringify_keys(book))
+                    .and_return(bookWithId)
+
+                post '/api/books', book.to_json
+
+                expect(last_response.status).to eq 201
+                expect(last_response.content_type).to eq('application/json')
+                expect(last_response.body).to eq(bookWithId.to_json)
             end
         end
 

@@ -14,6 +14,17 @@ class BooksRepository
         getBooksFromEsResponse(result)
     end
 
+    def create_book(book)
+        response = @es.index(
+            :index => 'bookshelf',
+            :type => 'books',
+            :body => book)
+
+        result = book.clone
+        result[:id] = response[:_id]
+        return result
+    end
+
     def get_shelf(userId)
         shelf = @es.get(
             :index => 'bookshelf',
@@ -65,6 +76,14 @@ class BookshelfApi < Sinatra::Application
         content_type :json
         settings.booksRepository.all_books.to_json
     end
+
+    post '/api/books' do
+        content_type :json
+        book = JSON.parse(request.body.read)
+        status 201
+        settings.booksRepository.create_book(book).to_json
+    end
+
 
     get '/api/shelves/:userId' do
         content_type :json
