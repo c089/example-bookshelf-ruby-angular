@@ -29,19 +29,19 @@ describe('bookshelf frontend app', function () {
     }));
 });
 
-describe('BooksApiService', function () {
-    var api;
+describe('BooksRepository', function () {
+    var repo;
 
     beforeEach(module('bookshelfApp'));
 
-    beforeEach(inject(function (BooksApiService) {
-        api = BooksApiService;
+    beforeEach(inject(function (BooksRepository) {
+        repo = BooksRepository;
     }));
 
     it('should allow to get all books', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/books').respond(books);
-        promise = api.retrieveBooks().then(function (result) {
+        promise = repo.retrieveBooks().then(function (result) {
             expect(result).to.deep.equal(books);
         });
         $httpBackend.flush();
@@ -51,7 +51,7 @@ describe('BooksApiService', function () {
     it('should allow to get a users shelf', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/shelves/c089').respond(books);
-        promise = api.retrieveShelf('c089').then(function (result) {
+        promise = repo.retrieveShelf('c089').then(function (result) {
             expect(result).to.deep.equal(books);
         });
         $httpBackend.flush();
@@ -60,7 +60,7 @@ describe('BooksApiService', function () {
 
     it('can update a users shelf', inject(function ($httpBackend) {
         $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
-        api.updateShelf('c089', [books[0]]);
+        repo.updateShelf('c089', [books[0]]);
         $httpBackend.flush();
     }));
 

@@ -12,14 +12,14 @@ describe('ShelfController', function () {
         };
 
         module('bookshelfApp', function ($provide) {
-            $provide.value('BooksApiService', serviceStub);
+            $provide.value('BooksRepository', serviceStub);
         });
 
         inject(function ($injector) {
             var $q = $injector.get('$q');
             $controller = $injector.get('$controller');
             $rootScope = $injector.get('$rootScope');
-            api = $injector.get('BooksApiService');
+            api = $injector.get('BooksRepository');
 
             resolveWith = function resolveWith(stub, result) {
                 var deferred = $q.defer();

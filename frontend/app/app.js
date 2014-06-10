@@ -15,7 +15,7 @@ mod.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-mod.factory('BooksApiService', ['$http', function ($http) {
+mod.factory('BooksRepository', ['$http', function ($http) {
     var shelfPath = function (userId) {
         return '/api/shelves/' + userId;
     };

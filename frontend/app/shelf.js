@@ -1,12 +1,12 @@
 angular.module('bookshelfApp.shelf', []).controller(
         'ShelfController', 
-        function ($q, $routeParams, $scope, BooksApiService) {
+        function ($q, $routeParams, $scope, BooksRepository) {
     var sendShelfToServer = function () {
         var booksOnShelf = _.chain($scope.books)
             .where({isOnShelf: true})
             .map(function (x) { return _.omit(x, 'isOnShelf'); })
             .value();
-        BooksApiService.updateShelf($routeParams.userId, booksOnShelf);
+        BooksRepository.updateShelf($routeParams.userId, booksOnShelf);
     };
 
     $scope.addToShelf = function (book) {
@@ -20,8 +20,8 @@ angular.module('bookshelfApp.shelf', []).controller(
     };
 
     $q.all([
-        BooksApiService.retrieveBooks(),
-        BooksApiService.retrieveShelf($routeParams.userId)
+        BooksRepository.retrieveBooks(),
+        BooksRepository.retrieveShelf($routeParams.userId)
     ]).then(function (results) {
         var allBooks = results[0];
         var booksOnShelve = results[1];
