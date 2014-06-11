@@ -32,6 +32,18 @@ describe('BooksRepository', function () {
         return promise;
     }));
 
+    it('can delete a book', inject(function ($httpBackend) {
+        var promise,
+            id = 'foo',
+            bookData = { id: id, author: 'a', title: 't' };
+        $httpBackend.expectDELETE('/api/books/foo').respond(204, '');
+
+        promise = repo.deleteBook(id);
+
+        $httpBackend.flush();
+        return promise;
+    }));
+
     it('should allow to get a users shelf', inject(function ($httpBackend) {
         var promise;
         $httpBackend.expectGET('/api/shelves/c089').respond(books);
@@ -43,7 +55,7 @@ describe('BooksRepository', function () {
     }));
 
     it('can update a users shelf', inject(function ($httpBackend) {
-        $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200);
+        $httpBackend.expectPUT('/api/shelves/c089', ['1']).respond(200, '');
         repo.updateShelf('c089', [books[0]]);
         $httpBackend.flush();
     }));

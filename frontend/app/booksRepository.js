@@ -14,6 +14,9 @@ angular.module('bookshelfApp.booksRepository', [])
                 return $http.post('/api/books', bookData)
                     .then(extractData);
             },
+            deleteBook: function (bookId) {
+                return $http.delete('/api/books/' + bookId);
+            },
             retrieveShelf: function(userId) {
                 return $http.get(shelfPath(userId)).then(extractData);
             },
