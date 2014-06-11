@@ -1,12 +1,31 @@
-<ul>
-    <li ng-repeat="book in books" />
-        {{book.title}} by {{book.author}}
-    </li>
-</ul>
+<div id="admin" class="row">
+    <ul class="col-md-6">
+        <h3>List of Books</h3>
+        <li ng-repeat="book in books" />
+            {{book.title}} by {{book.author}}
+        </li>
+    </ul>
 
-<form novalidate>
-    Author: <input type="text" ng-model="book.author" /><br />
-    Title: <input type="text" ng-model="book.title" /><br />
-    Image: <input type="text" ng-model="book.image" />
-    <button ng-click="addBook(book)">Add Book</button>
-</form>
+    <div class="col-md-6">
+        <h3>Add Book</h3>
+        <form role="form" novalidate>
+            <div class="form-group">
+                <label>
+                    Author <input class="form-control" type="text" ng-model="book.author" />
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Title <input class="form-control" type="text" ng-model="book.title" />
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    Cover Image URL<input class="form-control" type="url" ng-model="book.image" />
+                </label>
+            </div>
+
+            <button class="btn btn-default" ng-click="addBook(book)">Add Book</button>
+        </form>
+    </div>
+</div>
