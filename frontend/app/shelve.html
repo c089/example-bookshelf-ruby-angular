@@ -16,7 +16,7 @@
 
     <ul class="col-md-9">
         <h3>Books on Shelve</h3>
-        <li ng-repeat="book in books | filter:{isOnShelf:true}" ng-click="removeFromShelf(book)">
+        <li class="col-md-3" ng-repeat="book in books | filter:{isOnShelf:true}" ng-click="removeFromShelf(book)">
             {{book.title}} by {{book.author}}
             <img class="img-responsive img-rounded" ng-src="{{book.image}}" />
             <span class="glyphicon glyphicon-minus"></span>
