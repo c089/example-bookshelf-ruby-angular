@@ -96,6 +96,10 @@ class BookshelfApi < Sinatra::Application
         settings.booksRepository.create_book(book).to_json
     end
 
+    delete '/api/books/:id' do
+        settings.booksRepository.delete_book(params[:id])
+        status 204
+    end
 
     get '/api/shelves/:userId' do
         content_type :json

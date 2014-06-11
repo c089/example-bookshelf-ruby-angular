@@ -176,6 +176,15 @@ describe 'Bookshelf API server' do
             end
         end
 
+        describe 'DELETE /api/books/:id' do
+            it 'deletes the book' do
+                id = 'foo'
+                expect(repo).to receive(:delete_book).with(id)
+                delete '/api/books/foo'
+                expect(last_response.status).to eq 204
+            end
+        end
+
         describe 'GET /api/shelves/:userId' do
             it 'loads books on users shelf' do
                 expect(repo)
