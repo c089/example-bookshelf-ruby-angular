@@ -5,8 +5,8 @@ require_relative '../app/bookshelf_api'
 
 describe 'Bookshelf API server' do
     let(:booksInApiFormat) {
-        [ { id: 'i1', title: 't1', author: 'a1' },
-          { id: 'i2', title: 't2', author: 'a2' } ]
+        [ { id: 'i1', title: 't1', author: 'a1', image: 'i1' },
+          { id: 'i2', title: 't2', author: 'a2', image: 'i2' } ]
     }
 
     describe BooksRepository do
@@ -18,9 +18,9 @@ describe 'Bookshelf API server' do
                     'total' => 2,
                     'hits' => [
                        { '_id' => 'i1', '_source' =>
-                         { 'title' => 't1', 'author' => 'a1' } },
+                         { 'title' => 't1', 'author' => 'a1', 'image' => 'i1' } },
                        { '_id' => 'i2', '_source' =>
-                         { 'title' => 't2', 'author' => 'a2' } },
+                         { 'title' => 't2', 'author' => 'a2', 'image' => 'i2' } },
                     ]
                 }
             }

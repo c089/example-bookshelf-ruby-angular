@@ -60,7 +60,12 @@ class BooksRepository
     def getBooksFromEsResponse(response)
         response['hits']['hits'].map { |hit|
             s = hit['_source']
-            { id: hit['_id'], title: s['title'], author: s['author'] }
+            {
+                id: hit['_id'],
+                title: s['title'],
+                author: s['author'],
+                image: s['image']
+            }
         }
     end
 
