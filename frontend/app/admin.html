@@ -8,7 +8,7 @@
         <h3>List of Books</h3>
         <li ng-repeat="book in books" />
             {{book.title}} by {{book.author}}
-            <span class="glyphicon glyphicon-remove"></span>
+            <span ng-click="deleteBook(book)" class="glyphicon glyphicon-remove"></span>
         </li>
     </ul>
 
