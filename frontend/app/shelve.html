@@ -1,13 +1,24 @@
-<div id="books">
+<style>
+    #books ul li span.glyphicon { display: none; }
+    #books ul li:hover span.glyphicon { display: inline; }
+</style>
 
-    <h3>Available Books</h3>
-    <ul>
-        <li ng-repeat="book in books | filter:{isOnShelf:false}" ng-click="addToShelf(book)">{{book.title}} by {{book.author}}</li>
+<div id="books" class-"row">
+
+    <ul class="col-md-3">
+        <h3>Available Books</h3>
+        <li ng-repeat="book in books | filter:{isOnShelf:false}" ng-click="addToShelf(book)">
+            {{book.title}} by {{book.author}}
+            <span class="glyphicon glyphicon-plus"></span>
+        </li>
     </ul>
 
-    <h3>Books on Shelve</h3>
-    <ul>
-        <li ng-repeat="book in books | filter:{isOnShelf:true}" ng-click="removeFromShelf(book)">{{book.title}} by {{book.author}}</li>
+    <ul class="col-md-9">
+        <h3>Books on Shelve</h3>
+        <li ng-repeat="book in books | filter:{isOnShelf:true}" ng-click="removeFromShelf(book)">
+            {{book.title}} by {{book.author}}
+            <span class="glyphicon glyphicon-minus"></span>
+        </li>
     </ul>
 
 </div>
