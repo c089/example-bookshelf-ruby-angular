@@ -16,5 +16,10 @@ mod.controller('AdminController',
                 .then(updateBookList);
         };
 
+        $scope.deleteBook = function (book) {
+            $scope.books = _($scope.books).without(book);
+            BooksRepository.deleteBook(book.id);
+        };
+
         updateBookList();
     });

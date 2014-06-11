@@ -8,7 +8,8 @@ describe('AdminController', function () {
         module('bookshelfApp', function ($provide) {
             repo = {
                 createBook: sinon.stub(),
-                retrieveBooks: sinon.stub()
+                retrieveBooks: sinon.stub(),
+                deleteBook: sinon.stub()
             }
             $provide.value('BooksRepository', repo);
         });
@@ -41,7 +42,7 @@ describe('AdminController', function () {
             },
             scope = {};
 
-        $controller('AdminController', { $scope: scope, });
+        $controller('AdminController', { $scope: scope });
 
         resolveWith(repo.createBook, {});
         resolveWith(repo.retrieveBooks, [book]);
@@ -56,5 +57,22 @@ describe('AdminController', function () {
         // and the list of books is updated
         $rootScope.$apply();
         expect(scope.books).to.deep.eq([book]);
+    });
+
+    it('can delete a book', function () {
+        var book = {
+                id: 'theId',
+                title: 't',
+                author: 'a',
+                image: 'i.jpg'
+            },
+            scope = { books: [book] };
+        $controller('AdminController', { $scope: scope });
+
+        scope.deleteBook(book);
+
+        expect(repo.deleteBook).to.have.been.calledOnce;
+        expect(repo.deleteBook).to.have.been.calledWith('theId');
+        expect(scope.books).to.have.length(0);
     });
 });
