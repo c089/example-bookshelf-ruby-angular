@@ -61,6 +61,18 @@ describe 'Bookshelf API server' do
 
         end
 
+        describe 'delete_book' do
+            it 'removes the book from the index' do
+                id = 'theId'
+                expect(esClient).to receive(:delete)
+                    .with(:index => 'bookshelf',
+                          :type => 'books',
+                          :id => id)
+
+                repo.delete_book(id)
+            end
+        end
+
         describe 'get_shelf' do
             it 'loads all books from a users shelf' do
                 ids = ['i1', 'i2']

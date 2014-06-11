@@ -27,6 +27,10 @@ class BooksRepository
         return result
     end
 
+    def delete_book(id)
+        @es.delete(:index => 'bookshelf', :type => 'books', :id => id)
+    end
+
     def get_shelf(userId)
         shelf = @es.get(
             :index => 'bookshelf',
