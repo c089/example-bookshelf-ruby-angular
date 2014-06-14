@@ -17,6 +17,6 @@ mod.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'shelve.html'
         })
         .otherwise({
-            redirectTo: '/shelve/foo'
+            redirectTo: '/admin'
         });
 }]);
